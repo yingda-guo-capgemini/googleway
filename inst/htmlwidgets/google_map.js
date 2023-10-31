@@ -89,7 +89,8 @@ HTMLWidgets.widget({
                                         pitch: x.split_view_options.pitch
                                         //heading: 34,
                                         //pitch: 10
-                                      }
+                                      },
+                                    imageDateControl: true
                                 });
 
                             map.setStreetView( panorama );
