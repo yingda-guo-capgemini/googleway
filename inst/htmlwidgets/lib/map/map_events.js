@@ -31,6 +31,78 @@ function map_click(map_id, mapObject, mapInfo) {
   });
 }
 
+function pano_position_changed(map_id, panoObject, mapInfo){
+  //'use strict';
+  if (!HTMLWidgets.shinyMode) {
+    return;
+  }
+
+  panorama = panoObject;
+
+  panorama.addListener("position_changed", () => {
+
+      var eventInfo = $.extend(
+      {
+        id: map_id,
+        lat: panorama.getPosition().lat(),
+        lon: panorama.getPosition().lng(),
+        randomValue: Math.random()
+      },
+      mapInfo
+    ),
+    event_return_type = window.googleway.params[1].event_return_type;
+    eventInfo = event_return_type === "list" ? eventInfo : JSON.stringify(eventInfo);
+    Shiny.onInputChange(map_id + "_pano_position_changed", eventInfo);
+
+    console.log(JSON.stringify(eventInfo) + "");
+
+  });
+
+/*  panorama.addListener("pov_changed", () => {
+
+    console.log(JSON.stringify(panorama.getPov().heading) + "");
+    console.log(JSON.stringify(panorama.getPov().pitch) + "");
+
+  });*/
+
+}
+
+function pano_view_changed(map_id, panoObject, mapInfo){
+  //'use strict';
+  if (!HTMLWidgets.shinyMode) {
+    return;
+  }
+
+  panorama = panoObject;
+
+  panorama.addListener("pov_changed", () => {
+
+      var eventInfo = $.extend(
+      {
+        id: map_id,
+        heading: panorama.getPov().heading,
+        pitch: panorama.getPov().pitch,
+        randomValue: Math.random()
+      },
+      mapInfo
+    ),
+    event_return_type = window.googleway.params[1].event_return_type;
+    eventInfo = event_return_type === "list" ? eventInfo : JSON.stringify(eventInfo);
+    Shiny.onInputChange(map_id + "_pano_view_changed", eventInfo);
+
+    console.log(JSON.stringify(eventInfo) + "");
+
+  });
+
+/*  panorama.addListener("pov_changed", () => {
+
+    console.log(JSON.stringify(panorama.getPov().heading) + "");
+    console.log(JSON.stringify(panorama.getPov().pitch) + "");
+
+  });*/
+
+}
+
 function map_right_click(map_id, mapObject, mapInfo) {
   if (!HTMLWidgets.shinyMode) {
     return;

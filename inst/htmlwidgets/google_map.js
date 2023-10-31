@@ -94,6 +94,12 @@ HTMLWidgets.widget({
 
                             map.setStreetView( panorama );
 
+                            // add listener event
+                            //panorama.addListener("position_changed", () => {
+                              //console.log(JSON.stringify(panorama.getPosition()) + "");
+
+                            //});
+
                             window[ el.id + x.split_view ] = panorama;
                         }
 
@@ -417,6 +423,12 @@ function initialise_map(el, x) {
     map_right_click(el.id, window[el.id + 'map'], mapInfo);
     bounds_changed(el.id, window[el.id + 'map'], mapInfo);
     zoom_changed(el.id, window[el.id + 'map'], mapInfo);
+
+    // Add panorama event
+    if(x.split_view !== null) {
+      pano_position_changed(el.id, window[el.id + x.split_view ], mapInfo)
+      pano_view_changed(el.id, window[el.id + x.split_view ], mapInfo)
+    }
 
     if( HTMLWidgets.shinyMode) {
       Shiny.setInputValue(el.id + "_initialised", {});
