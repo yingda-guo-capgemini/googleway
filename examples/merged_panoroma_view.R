@@ -16,8 +16,6 @@ ui <- fluidPage(
 
 server <- function(input, output, session) {
 
-
-
   output$map <- renderGoogle_map({
     df <- data.frame(transformer_number = "AGM00002", lat = 44.56424, lon =  -80.94006)
 
