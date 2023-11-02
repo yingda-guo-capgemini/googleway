@@ -106,6 +106,7 @@ HTMLWidgets.widget({
 
 
                         //global map object
+                        map.setOptions({ styles: styles["hide"] });
                         window[el.id + 'map'] = map;
 
                         if (google !== undefined && google.charts !== undefined ) {
@@ -429,6 +430,9 @@ function initialise_map(el, x) {
     if(x.split_view !== null) {
       pano_position_changed(el.id, window[el.id + x.split_view ], mapInfo)
       pano_view_changed(el.id, window[el.id + x.split_view ], mapInfo)
+    }else{
+      pano_position_changed(el.id, window[el.id + 'map'].getStreetView(), mapInfo)
+      pano_view_changed(el.id, window[el.id + 'map'].getStreetView(), mapInfo)
     }
 
     if( HTMLWidgets.shinyMode) {
@@ -600,4 +604,19 @@ function set_map_center(map_id, latlon) {
 function set_map_zoom(map_id, zoom) {
   window[map_id + 'map'].setZoom(zoom);
 }
+
+const styles = {
+  default: [],
+  hide: [
+    {
+      featureType: "poi.business",
+      stylers: [{ visibility: "off" }],
+    },
+    {
+      featureType: "transit",
+      elementType: "labels.icon",
+      stylers: [{ visibility: "off" }],
+    },
+  ],
+};
 
