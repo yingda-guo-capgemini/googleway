@@ -31,7 +31,7 @@ function map_click(map_id, mapObject, mapInfo) {
   });
 }
 
-function pano_position_changed(map_id, panoObject, sv, mapInfo){
+function pano_position_changed(map_id, panoObject, street_view_service, mapInfo){
   //'use strict';
   if (!HTMLWidgets.shinyMode) {
     return;
@@ -41,7 +41,7 @@ function pano_position_changed(map_id, panoObject, sv, mapInfo){
 
   panorama.addListener("position_changed", () => {
     // Grab image date info
-    sv.getPanorama({ pano: panorama.getPano()}).then(({data}) => {
+    street_view_service.getPanorama({ pano: panorama.getPano()}).then(({data}) => {
       var eventInfo = $.extend(
         {
           id: map_id,
@@ -70,7 +70,7 @@ function pano_position_changed(map_id, panoObject, sv, mapInfo){
 
 }
 
-function pano_view_changed(map_id, panoObject, sv, mapInfo){
+function pano_view_changed(map_id, panoObject, mapInfo){
   //'use strict';
   if (!HTMLWidgets.shinyMode) {
     return;

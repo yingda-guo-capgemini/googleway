@@ -72,7 +72,7 @@ HTMLWidgets.widget({
                         });
 
                         // create StreetView Service
-                        const sv = new google.maps.StreetViewService();
+                        const street_view_service = new google.maps.StreetViewService();
 
                         // split view
 
@@ -114,7 +114,7 @@ HTMLWidgets.widget({
                             //console.log("exists");
                             clearInterval(checkExists);
 
-                            initialise_map(el, x, sv);
+                            initialise_map(el, x, street_view_service);
 
                         } else {
                             //console.log("does not exist!");
@@ -148,7 +148,7 @@ HTMLWidgets.widget({
                     });
 
                     window[el.id + 'map'] = map;
-                    initialise_map(el, x, sv);
+                    initialise_map(el, x, street_view_service);
                 }
             },
             resize: function (width, height) {
@@ -287,7 +287,7 @@ function findById(source, id, returnType) {
     return;
 }
 
-function initialise_map(el, x, sv) {
+function initialise_map(el, x, street_view_service) {
 
     var mapInfo,
         input,
@@ -429,11 +429,11 @@ function initialise_map(el, x, sv) {
 
     // Add panorama event
     if(x.split_view !== null) {
-      pano_position_changed(el.id, window[el.id + x.split_view ], sv, mapInfo)
-      pano_view_changed(el.id, window[el.id + x.split_view ], sv, mapInfo)
+      pano_position_changed(el.id, window[el.id + x.split_view ], street_view_service, mapInfo)
+      pano_view_changed(el.id, window[el.id + x.split_view ], mapInfo)
     }else{
-      pano_position_changed(el.id, window[el.id + 'map'].getStreetView(), sv, mapInfo)
-      pano_view_changed(el.id, window[el.id + 'map'].getStreetView(), sv, mapInfo)
+      pano_position_changed(el.id, window[el.id + 'map'].getStreetView(), street_view_service, mapInfo)
+      pano_view_changed(el.id, window[el.id + 'map'].getStreetView(), mapInfo)
     }
 
     if( HTMLWidgets.shinyMode) {
