@@ -43,8 +43,6 @@ HTMLWidgets.widget({
 
                 if (HTMLWidgets.shinyMode) {
 
-
-
                     // use setInterval to check if the map can be loaded
                     // the map is dependant on the Google Maps JS resource
                     // - usually implemented via callback
@@ -72,6 +70,9 @@ HTMLWidgets.widget({
                             rotateControl: x.rotateControl,
                             fullscreenControl: x.fullscreenControl
                         });
+
+                        // create StreetView Service
+                        const sv = new google.maps.StreetViewService();
 
                         // split view
 
@@ -113,7 +114,7 @@ HTMLWidgets.widget({
                             //console.log("exists");
                             clearInterval(checkExists);
 
-                            initialise_map(el, x);
+                            initialise_map(el, x, sv);
 
                         } else {
                             //console.log("does not exist!");
@@ -147,7 +148,7 @@ HTMLWidgets.widget({
                     });
 
                     window[el.id + 'map'] = map;
-                    initialise_map(el, x);
+                    initialise_map(el, x, sv);
                 }
             },
             resize: function (width, height) {
@@ -286,7 +287,7 @@ function findById(source, id, returnType) {
     return;
 }
 
-function initialise_map(el, x) {
+function initialise_map(el, x, sv) {
 
     var mapInfo,
         input,
@@ -428,11 +429,11 @@ function initialise_map(el, x) {
 
     // Add panorama event
     if(x.split_view !== null) {
-      pano_position_changed(el.id, window[el.id + x.split_view ], mapInfo)
-      pano_view_changed(el.id, window[el.id + x.split_view ], mapInfo)
+      pano_position_changed(el.id, window[el.id + x.split_view ], sv, mapInfo)
+      pano_view_changed(el.id, window[el.id + x.split_view ], sv, mapInfo)
     }else{
-      pano_position_changed(el.id, window[el.id + 'map'].getStreetView(), mapInfo)
-      pano_view_changed(el.id, window[el.id + 'map'].getStreetView(), mapInfo)
+      pano_position_changed(el.id, window[el.id + 'map'].getStreetView(), sv, mapInfo)
+      pano_view_changed(el.id, window[el.id + 'map'].getStreetView(), sv, mapInfo)
     }
 
     if( HTMLWidgets.shinyMode) {

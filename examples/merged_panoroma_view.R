@@ -37,18 +37,8 @@ server <- function(input, output, session) {
   })
 
 
-  output$text1 <- renderText({
-    paste0("StreetView lat :", input$map_pano_position_changed$lat, " lng:", input$map_pano_position_changed$lon)
-
-  })
-
-  output$text2 <- renderText({
-    paste0("StreetView Angle heading :", input$map_pano_view_changed$heading, " pitch:", input$map_pano_view_changed$pitch)
-
-  })
-
   output$text3 <- renderText({
-    paste0("StreetView lat :", input$map_old_pano_position_changed$lat, " lng:", input$map_old_pano_position_changed$lon)
+    paste0("StreetView lat :", input$map_old_pano_position_changed$lat, " lng:", input$map_old_pano_position_changed$lon, "  image_taken_date: ", input$map_old_pano_position_changed$image_taken_date)
   })
 
   output$text4 <- renderText({

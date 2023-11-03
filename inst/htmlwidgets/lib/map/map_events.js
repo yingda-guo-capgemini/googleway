@@ -31,7 +31,7 @@ function map_click(map_id, mapObject, mapInfo) {
   });
 }
 
-function pano_position_changed(map_id, panoObject, mapInfo){
+function pano_position_changed(map_id, panoObject, sv, mapInfo){
   //'use strict';
   if (!HTMLWidgets.shinyMode) {
     return;
@@ -40,19 +40,22 @@ function pano_position_changed(map_id, panoObject, mapInfo){
   panorama = panoObject;
 
   panorama.addListener("position_changed", () => {
-
+    // Grab image date info
+    sv.getPanorama({ pano: panorama.getPano()}).then(({data}) => {
       var eventInfo = $.extend(
-      {
-        id: map_id,
-        lat: panorama.getPosition().lat(),
-        lon: panorama.getPosition().lng(),
-        randomValue: Math.random()
-      },
-      mapInfo
-    ),
-    event_return_type = window.googleway.params[1].event_return_type;
-    eventInfo = event_return_type === "list" ? eventInfo : JSON.stringify(eventInfo);
-    Shiny.onInputChange(map_id + "_pano_position_changed", eventInfo);
+        {
+          id: map_id,
+          lat: panorama.getPosition().lat(),
+          lon: panorama.getPosition().lng(),
+          image_taken_date: data.imageDate,
+          randomValue: Math.random()
+        },
+        mapInfo
+        ),
+      event_return_type = window.googleway.params[1].event_return_type;
+      eventInfo = event_return_type === "list" ? eventInfo : JSON.stringify(eventInfo);
+      Shiny.onInputChange(map_id + "_pano_position_changed", eventInfo);
+    }).catch((e) => console.error("Street View data not found for this location."));
 
     console.log(JSON.stringify(eventInfo) + "");
 
@@ -67,7 +70,7 @@ function pano_position_changed(map_id, panoObject, mapInfo){
 
 }
 
-function pano_view_changed(map_id, panoObject, mapInfo){
+function pano_view_changed(map_id, panoObject, sv, mapInfo){
   //'use strict';
   if (!HTMLWidgets.shinyMode) {
     return;
@@ -90,7 +93,7 @@ function pano_view_changed(map_id, panoObject, mapInfo){
     eventInfo = event_return_type === "list" ? eventInfo : JSON.stringify(eventInfo);
     Shiny.onInputChange(map_id + "_pano_view_changed", eventInfo);
 
-    console.log(JSON.stringify(eventInfo) + "");
+    //console.log(JSON.stringify(eventInfo) + "");
 
   });
 

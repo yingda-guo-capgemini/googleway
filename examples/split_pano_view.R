@@ -46,7 +46,7 @@ server <- function(input, output, session) {
 
 
   output$text1 <- renderText({
-    paste0("StreetView lat :", input$map_pano_position_changed$lat, " lng:", input$map_pano_position_changed$lon)
+    paste0("StreetView lat :", input$map_pano_position_changed$lat, " lng:", input$map_pano_position_changed$lon, "  image_taken_date: ", input$map_pano_position_changed$image_taken_date)
 
   })
 
