@@ -430,10 +430,10 @@ function initialise_map(el, x, street_view_service) {
     // Add panorama event
     if(x.split_view !== null) {
       pano_position_changed(el.id, window[el.id + x.split_view ], street_view_service, mapInfo)
-      pano_view_changed(el.id, window[el.id + x.split_view ], mapInfo)
+      pano_view_changed(el.id, window[el.id + x.split_view ], street_view_service, mapInfo)
     }else{
       pano_position_changed(el.id, window[el.id + 'map'].getStreetView(), street_view_service, mapInfo)
-      pano_view_changed(el.id, window[el.id + 'map'].getStreetView(), mapInfo)
+      pano_view_changed(el.id, window[el.id + 'map'].getStreetView(), street_view_service, mapInfo)
     }
 
     if( HTMLWidgets.shinyMode) {

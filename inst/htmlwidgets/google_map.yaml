@@ -1,6 +1,6 @@
 dependencies:
   - name: map
-    version: 1.0.11
+    version: 1.0.45
     src: "htmlwidgets/lib/map"
     script:
       - map_events.js

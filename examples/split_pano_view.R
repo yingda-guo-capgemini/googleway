@@ -1,6 +1,4 @@
 library(shiny)
-library(shinydashboard)
-library(DT)
 library(googleway)
 
 # Load Google api key
@@ -9,10 +7,10 @@ googleway::set_key(google_map_api_key)
 
 ui <- fluidPage(
 
-  fluidRow(box(width = 12,
-                 google_mapOutput(outputId = "map"))),
-  fluidRow(box(width = 12,
-                 google_mapOutput(outputId = "pano"))),
+  fluidRow(width = 12,
+                 google_mapOutput(outputId = "map")),
+  fluidRow(width = 12,
+                 google_mapOutput(outputId = "pano")),
   fluidRow(verbatimTextOutput("text1")),
   fluidRow(verbatimTextOutput("text2"))
   # fluidRow(box(width = 12, google_mapOutput(outputId = "map_old"))),
@@ -44,7 +42,7 @@ server <- function(input, output, session) {
 
 
   output$text1 <- renderText({
-    paste0("StreetView lat :", input$map_pano_position_changed$lat, " lng:", input$map_pano_position_changed$lon, "  image_taken_date: ", input$map_pano_position_changed$image_taken_date)
+    paste0("StreetView lat :", input$map_pano_position_changed$lat, " lng:", input$map_pano_position_changed$lon, "  image_taken_date: ", input$map_pano_image_date)
 
   })
 
