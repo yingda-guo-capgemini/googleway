@@ -3,7 +3,7 @@ googleMarkerDependency <- function() {
   list(
     createHtmlDependency(
       name = "markers",
-      version = "1.0.0",
+      version = "1.0.19",
       src = system.file("htmlwidgets/lib/markers", package = "googleway"),
       script = c("markers.js", "markerclusterer.js"),
       all_files = FALSE
@@ -135,7 +135,8 @@ add_markers <- function(map,
                         digits = 4,
                         load_interval = 0,
                         focus_layer = FALSE,
-                        close_info_window = FALSE
+                        close_info_window = FALSE,
+                        split_view = NULL
                         ){
 
   #objArgs <- match.call(expand.dots = F)
@@ -186,15 +187,15 @@ add_markers <- function(map,
   objArgs <- markerColourIconCheck(data, objArgs, colour, marker_icon)
 
   ## need to do an 'infoWindowCheck'
-  ## to see if the user passed in a list, taht will be used as a chart...
+  ## to see if the user passed in a list, that will be used as a chart...
 
   ## IDEAS:
   ## - pass the data separately to JS, and let the browser find
   ## the correct data to use in the info_window from the JSON, when the marker is clicked
   ##
   ## - within the JS code, inside the `google.maps.event.addListener()` for info windows
-  ## write code taht extracts the correct info window content from an InfoWindowContent JSON object
-  ## Which will mean passing this object in throgh R.
+  ## write code that extracts the correct info window content from an InfoWindowContent JSON object
+  ## Which will mean passing this object in through R.
   ## I can test this directly by adding in some JSON to use as the pie chart
   ## and see if plotting it works.
   ##
@@ -235,7 +236,7 @@ add_markers <- function(map,
 
   map <- addDependency(map, googleMarkerDependency())
 
-  invoke_method(map, 'add_markers', shape, cluster, cluster_options, update_map_view, layer_id, usePolyline, load_interval, focus_layer, close_info_window)
+  invoke_method(map, 'add_markers', shape, cluster, cluster_options, update_map_view, layer_id, usePolyline, load_interval, focus_layer, close_info_window, split_view)
 }
 
 

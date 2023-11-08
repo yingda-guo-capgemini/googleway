@@ -12,7 +12,7 @@
  * @param layer_id
  *          the layer identifier
  */
-function add_markers(map_id, data_markers, cluster, cluster_options, update_map_view, layer_id, use_polyline, interval, focus, close_info_window) {
+function add_markers(map_id, data_markers, cluster, cluster_options, update_map_view, layer_id, use_polyline, interval, focus, close_info_window, split_view) {
 
     if (focus === true) {
         clear_bounds(map_id);
@@ -20,7 +20,7 @@ function add_markers(map_id, data_markers, cluster, cluster_options, update_map_
 
     createWindowObject(map_id, 'googleMarkers', layer_id);
 
-    promise_to_add_markers(map_id, data_markers, update_map_view, layer_id, use_polyline, interval).then(function(i) {
+    promise_to_add_markers(map_id, data_markers, update_map_view, layer_id, use_polyline, interval, split_view).then(function(i) {
 
         if (cluster === true) {
 
@@ -46,14 +46,14 @@ function add_markers(map_id, data_markers, cluster, cluster_options, update_map_
 
 }
 
-function promise_to_add_markers(map_id, data_markers, update_map_view, layer_id, use_polyline, interval) {
+function promise_to_add_markers(map_id, data_markers, update_map_view, layer_id, use_polyline, interval, split_view) {
 
     return new Promise(function(resolve, reject) {
         var i,
             infoWindow = new google.maps.InfoWindow();
 
         for (i = 0; i < Object.keys(data_markers).length; i++) {
-            set_markers(map_id, infoWindow, data_markers[i], update_map_view, layer_id, use_polyline, i * interval);
+            set_markers(map_id, infoWindow, data_markers[i], update_map_view, layer_id, use_polyline, i * interval, split_view);
         }
 
         if(i == Object.keys(data_markers).length) {
@@ -79,9 +79,10 @@ function cluster_markers(map_id, layer_id, cluster_options) {
     );
 }
 
-function set_markers(map_id, infoWindow, aMarker, update_map_view, layer_id, use_polyline, timeout) {
+function set_markers(map_id, infoWindow, aMarker, update_map_view, layer_id, use_polyline, timeout, split_view) {
 
     console.log( aMarker );
+    console.log( map_id );
 
     window.setTimeout(function () {
 
@@ -94,7 +95,7 @@ function set_markers(map_id, infoWindow, aMarker, update_map_view, layer_id, use
                 path = google.maps.geometry.encoding.decodePath(aMarker.polyline[j]);
                 latlon = new google.maps.LatLng(path[0].lat(), path[0].lng());
 
-                set_each_marker(latlon, aMarker, infoWindow, update_map_view, map_id, layer_id);
+                set_each_marker(latlon, aMarker, infoWindow, update_map_view, map_id, layer_id, split_view);
 
                 if (update_map_view === true) {
                     window[map_id + 'mapBounds'].extend(latlon);
@@ -104,7 +105,7 @@ function set_markers(map_id, infoWindow, aMarker, update_map_view, layer_id, use
         } else {
             latlon = new google.maps.LatLng(aMarker.lat, aMarker.lng);
 
-            set_each_marker(latlon, aMarker, infoWindow, update_map_view, map_id, layer_id);
+            set_each_marker(latlon, aMarker, infoWindow, update_map_view, map_id, layer_id, split_view);
 
             if (update_map_view === true) {
                 window[map_id + 'mapBounds'].extend(latlon);
@@ -143,7 +144,7 @@ function draw_chart(marker) {
 
 }
 
-function set_each_marker(latlon, aMarker, infoWindow, update_map_view, map_id, layer_id) {
+function set_each_marker(latlon, aMarker, infoWindow, update_map_view, map_id, layer_id, split_view) {
     var markerInfo,
         marker = new google.maps.Marker({
             id: aMarker.id,
@@ -210,6 +211,49 @@ function set_each_marker(latlon, aMarker, infoWindow, update_map_view, map_id, l
     marker_dragged(map_id, marker, marker.id, markerInfo);
     window[map_id + 'googleMarkers' + layer_id].push(marker);
     marker.setMap(window[map_id + 'map']);
+
+    if (split_view !== null) {
+      var marker_pano = new google.maps.Marker({
+            id: aMarker.id + "pano",
+            icon: aMarker.url,
+            position: latlon,
+            //map: window[map_id + split_view], // your code doesn't have a 'map' variable
+            draggable: aMarker.draggable,
+            opacity: aMarker.opacity,
+            opacityHolder: aMarker.opacity,
+            title: aMarker.title,
+            label: aMarker.label,
+            mouseOver: aMarker.mouse_over,
+            mouseOverGroup: aMarker.mouse_over_group,
+            info_window: aMarker.info_window,
+            chart_type: aMarker.chart_type,
+            chart_data: aMarker.chart_data,
+            chart_options: aMarker.chart_options
+        });
+
+        marker_click(map_id, marker_pano, marker_pano.id, markerInfo);
+        marker_dragged(map_id, marker_pano, marker_pano.id, markerInfo);
+
+        window[map_id + 'googleMarkers' + layer_id].push(marker_pano);
+        marker_pano.setMap(window[map_id + split_view]);
+
+        // Sync location
+        marker.addListener("dragend", (event) => {
+          const position = marker.position;
+          console.log("lat:" + position.lat() + " lng:" + position.lng());
+          marker_pano.setPosition(position);
+        });
+
+        marker_pano.addListener("dragend", (event) => {
+          const position = marker_pano.position;
+          console.log("lat:" + position.lat() + " lng:" + position.lng());
+          marker.setPosition(position);
+        });
+    }
+
+
+
+
 }
 
 /**
