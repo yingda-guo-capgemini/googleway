@@ -11,7 +11,6 @@ ui <- fluidPage(
   radioButtons("radio", label = h3("Map Click Operation"),
                      choices = list("None" = 1, "Add a Marker" = 2, "Remove a Marker" = 3),
                      selected = 1),
-
   fluidRow(width = 12,
                  google_mapOutput(outputId = "map")),
   fluidRow(width = 12,
